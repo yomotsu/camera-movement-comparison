@@ -18,18 +18,26 @@ canvas {
   padding: 5px;
 }
 
-.captionLeft {
-  font-size: 20px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  padding: 5px;
-}
-
+.captionLeft,
 .captionRight {
   font-size: 20px;
   position: absolute;
+  padding: 5px;
+}
+
+.captionLeft {
+  bottom: 0;
+  left: 0;
+}
+
+.captionRight {
   bottom: 0;
   right: 0;
-  padding: 5px;
+}
+
+@media ( max-width: 600px ) {
+  .captionLeft,
+  .captionRight {
+    font-size: 12px;
+  }
 }
