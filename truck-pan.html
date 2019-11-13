@@ -9,8 +9,7 @@
 <body>
 
 <div class="ui">
-  Truck vs. Pan <input type="range" value="0.5" min="0" max="1" step="0.01" id="input"><br>
-  Show Grid<input type="checkbox" id="showGridCheck">
+  Truck vs. Pan <input type="range" value="0.5" min="0" max="1" step="0.01" id="input">
 </div>
 <div class="captionLeft">
   Truck<br>
@@ -61,7 +60,6 @@ scene.add(
 );
 
 const grid = new THREE.GridHelper( 10, 10 );
-grid.visible = false;
 scene.add( grid );
 
 const gltfLoader = new GLTFLoader();
@@ -95,7 +93,6 @@ const onCameraStateChange = ( value ) => {
 
 onCameraStateChange( 0.5 );
 input.addEventListener( 'input', ( event ) => onCameraStateChange( + event.target.value ) );
-showGridCheck.addEventListener( 'change', ( event ) => grid.visible = event.target.checked );
 </script>
 
 
