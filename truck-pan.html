@@ -25,10 +25,9 @@
 <script type="module">
 import * as THREE from 'https://unpkg.com/three@0.109.0/build/three.module.js';
 import { GLTFLoader } from 'https://unpkg.com/three@0.109.0/examples/jsm/loaders/GLTFLoader.js';
-// import { DEBUG_MODE } from './js/constants.js';
 
-const CAMERA_DEFAULT_POS_RANGE = 3;
-const CAMERA_DEFAULT_ROT_RANGE = 40 * THREE.Math.DEG2RAD;
+const CAMERA_POS_RANGE = 3;
+const CAMERA_ROT_RANGE = 40 * THREE.Math.DEG2RAD;
 
 const width  = window.innerWidth / 2;
 const height = window.innerHeight;
@@ -81,8 +80,8 @@ const onCameraStateChange = ( value ) => {
 
   const _value = THREE.Math.mapLinear( value, 0, 1, -1, 1 );
 
-  camera0.position.x = _value * CAMERA_DEFAULT_POS_RANGE;
-  camera1.rotation.y = _value * - CAMERA_DEFAULT_ROT_RANGE;
+  camera0.position.x = _value * CAMERA_POS_RANGE;
+  camera1.rotation.y = _value * - CAMERA_ROT_RANGE;
   
   output0PosX.innerText = camera0.position.x.toFixed( 2 );
   output0RotY.innerText = ( camera0.rotation.y * THREE.Math.RAD2DEG ).toFixed( 2 );
