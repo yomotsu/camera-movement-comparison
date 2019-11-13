@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dolly vs. Zoom</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="ui">
+  Dolly vs. Zoom <input type="range" value="0.5" min="0" max="1" step="0.01" id="input"><br>
+  Show Grid<input type="checkbox" id="showGridCheck">
+</div>
+<div class="captionLeft">
+  Dolly in / out<br>
+  camera z: <output id="output0Z"></output> unit<br>
+  camera fov: <output id="output0Fov"></output> deg
+</div>
+<div class="captionRight">
+  Zoom in / out<br>
+  camera z: <output id="output1Z"></output> unit<br>
+  camera fov: <output id="output1Fov"></output> deg
+</div>
+
+<script type="module">
+import * as THREE from 'https://unpkg.com/three@0.109.0/build/three.module.js';
+import { GLTFLoader } from 'https://unpkg.com/three@0.109.0/examples/jsm/loaders/GLTFLoader.js';
+
+const CAMERA_DEFAULT_Z = 5;
+const CAMERA_DEFAULT_FOV = 60;
+
+const width  = window.innerWidth / 2;
+const height = window.innerHeight;
+const clock = new THREE.Clock();
+
+const scene  = new THREE.Scene();
+const camera0 = new THREE.PerspectiveCamera( CAMERA_DEFAULT_FOV, width / height, 0.001, 100 );
+camera0.position.set( 0, 0.5, CAMERA_DEFAULT_Z );
+
+const camera1 = new THREE.PerspectiveCamera( CAMERA_DEFAULT_FOV, width / height, 0.001, 100 );
+camera1.position.set( 0, 0.5, CAMERA_DEFAULT_Z );
+
+const renderer0 = new THREE.WebGLRenderer();
+renderer0.setSize( width, height );
+renderer0.gammaInput = true;
+renderer0.gammaOutput = true;
+document.body.appendChild( renderer0.domElement );
+
+const renderer1 = new THREE.WebGLRenderer();
+renderer1.setSize( width, height );
+renderer1.gammaInput = true;
+renderer1.gammaOutput = true;
+document.body.appendChild( renderer1.domElement );
+
+
+scene.add(
+	new THREE.HemisphereLight( 0xffffff, 0x332222 ),
+	new THREE.AmbientLight( 0x999999 )
+);
+
+const grid = new THREE.GridHelper( 10, 10 );
+grid.visible = false;
+scene.add( grid );
+
+const gltfLoader = new GLTFLoader();
+gltfLoader.load( './rubber-duck.glb', ( gltf ) => scene.add( gltf.scene ) );
+
+( function anim () {
+
+	const elapsed = clock.getElapsedTime();
+
+	// if ( elapsed > 10 ) { return; }
+
+	requestAnimationFrame( anim );
+	renderer0.render( scene, camera0 );
+	renderer1.render( scene, camera1 );
+
+} )();
+
+const onCameraStateChange = ( value ) => {
+
+  camera0.position.z = value * 2 * CAMERA_DEFAULT_Z;
+  camera1.fov = value * 2 * CAMERA_DEFAULT_FOV;
+  camera1.updateProjectionMatrix();
+  
+  output0Z.innerText = camera0.position.z.toFixed( 2 );
+  output0Fov.innerText = camera0.fov.toFixed( 2 );
+  output1Z.innerText = camera1.position.z.toFixed( 2 );
+  output1Fov.innerText = camera1.fov.toFixed( 2 );
+
+}
+
+onCameraStateChange( 0.5 );
+input.addEventListener( 'input', ( event ) => onCameraStateChange( + event.target.value ) );
+showGridCheck.addEventListener( 'change', ( event ) => grid.visible = event.target.checked );
+</script>
+
+
+</body>
+</html>

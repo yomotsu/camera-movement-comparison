@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Truck vs. Pan</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="ui">
+  Truck vs. Pan <input type="range" value="0.5" min="0" max="1" step="0.01" id="input"><br>
+  Show Grid<input type="checkbox" id="showGridCheck">
+</div>
+<div class="captionLeft">
+  Truck<br>
+  camera posX: <output id="output0PosX"></output> unit<br>
+  camera rotY: <output id="output0RotY"></output> deg
+</div>
+<div class="captionRight">
+  Pan<br>
+  camera posX: <output id="output1PosX"></output> unit<br>
+  camera rotY: <output id="output1RotY"></output> deg
+</div>
+
+<script type="module">
+import * as THREE from 'https://unpkg.com/three@0.109.0/build/three.module.js';
+import { GLTFLoader } from 'https://unpkg.com/three@0.109.0/examples/jsm/loaders/GLTFLoader.js';
+// import { DEBUG_MODE } from './js/constants.js';
+
+const CAMERA_DEFAULT_POS_RANGE = 3;
+const CAMERA_DEFAULT_ROT_RANGE = 40 * THREE.Math.DEG2RAD;
+
+const width  = window.innerWidth / 2;
+const height = window.innerHeight;
+const clock = new THREE.Clock();
+
+const scene  = new THREE.Scene();
+const camera0 = new THREE.PerspectiveCamera( 60, width / height, 0.001, 100 );
+camera0.position.set( 0, 0.5, 5 );
+
+const camera1 = new THREE.PerspectiveCamera( 60, width / height, 0.001, 100 );
+camera1.position.set( 0, 0.5, 5 );
+
+const renderer0 = new THREE.WebGLRenderer();
+renderer0.setSize( width, height );
+renderer0.gammaInput = true;
+renderer0.gammaOutput = true;
+document.body.appendChild( renderer0.domElement );
+
+const renderer1 = new THREE.WebGLRenderer();
+renderer1.setSize( width, height );
+renderer1.gammaInput = true;
+renderer1.gammaOutput = true;
+document.body.appendChild( renderer1.domElement );
+
+
+scene.add(
+	new THREE.HemisphereLight( 0xffffff, 0x332222 ),
+	new THREE.AmbientLight( 0x999999 )
+);
+
+const grid = new THREE.GridHelper( 10, 10 );
+grid.visible = false;
+scene.add( grid );
+
+const gltfLoader = new GLTFLoader();
+gltfLoader.load( './rubber-duck.glb', ( gltf ) => scene.add( gltf.scene ) );
+
+( function anim () {
+
+	const elapsed = clock.getElapsedTime();
+
+	// if ( elapsed > 10 ) { return; }
+
+	requestAnimationFrame( anim );
+	renderer0.render( scene, camera0 );
+	renderer1.render( scene, camera1 );
+
+} )();
+
+const onCameraStateChange = ( value ) => {
+
+  const _value = THREE.Math.mapLinear( value, 0, 1, -1, 1 );
+
+  camera0.position.x = _value * CAMERA_DEFAULT_POS_RANGE;
+  camera1.rotation.y = _value * - CAMERA_DEFAULT_ROT_RANGE;
+  
+  output0PosX.innerText = camera0.position.x.toFixed( 2 );
+  output0RotY.innerText = ( camera0.rotation.y * THREE.Math.RAD2DEG ).toFixed( 2 );
+  output1PosX.innerText = camera1.position.x.toFixed( 2 );
+  output1RotY.innerText = ( camera1.rotation.y * THREE.Math.RAD2DEG ).toFixed( 2 );
+
+}
+
+onCameraStateChange( 0.5 );
+input.addEventListener( 'input', ( event ) => onCameraStateChange( + event.target.value ) );
+showGridCheck.addEventListener( 'change', ( event ) => grid.visible = event.target.checked );
+</script>
+
+
+</body>
+</html>

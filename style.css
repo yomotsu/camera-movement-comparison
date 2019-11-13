@@ -1,0 +1,35 @@
+body {
+  font-family: sans-serif;
+  display: flex;
+  margin: 0;
+}
+canvas {
+  display: block;
+}
+
+.ui,
+.captionLeft,
+.captionRight {
+  background: rgba( 255, 255, 255, .5 );
+}
+
+.ui {
+  position: absolute;
+  padding: 5px;
+}
+
+.captionLeft {
+  font-size: 20px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 5px;
+}
+
+.captionRight {
+  font-size: 20px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 5px;
+}
