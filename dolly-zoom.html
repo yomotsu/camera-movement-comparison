@@ -23,8 +23,8 @@
 </div>
 
 <script type="module">
-import * as THREE from 'https://unpkg.com/three@0.109.0/build/three.module.js';
-import { GLTFLoader } from 'https://unpkg.com/three@0.109.0/examples/jsm/loaders/GLTFLoader.js';
+import * as THREE from 'https://cdn.skypack.dev/three@0.134.0/build/three.module.js';
+import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.134.0/examples/jsm/loaders/GLTFLoader.js';
 
 const CAMERA_DEFAULT_Z = 5;
 const CAMERA_DEFAULT_FOV = 60;
@@ -40,16 +40,20 @@ camera0.position.set( 0, 0.5, CAMERA_DEFAULT_Z );
 const camera1 = new THREE.PerspectiveCamera( CAMERA_DEFAULT_FOV, width / height, 0.001, 100 );
 camera1.position.set( 0, 0.5, CAMERA_DEFAULT_Z );
 
-const renderer0 = new THREE.WebGLRenderer();
+const renderer0 = new THREE.WebGLRenderer( { antialias: true } );
 renderer0.setSize( width, height );
-renderer0.gammaInput = true;
-renderer0.gammaOutput = true;
+renderer0.toneMapping = THREE.ACESFilmicToneMapping;
+renderer0.toneMappingExposure = 2.2;
+renderer0.physicallyCorrectLights = true;
+renderer0.outputEncoding = THREE.sRGBEncoding;
 document.body.appendChild( renderer0.domElement );
 
-const renderer1 = new THREE.WebGLRenderer();
+const renderer1 = new THREE.WebGLRenderer( { antialias: true } );
 renderer1.setSize( width, height );
-renderer1.gammaInput = true;
-renderer1.gammaOutput = true;
+renderer1.toneMapping = THREE.ACESFilmicToneMapping;
+renderer1.toneMappingExposure = 2.2;
+renderer1.physicallyCorrectLights = true;
+renderer1.outputEncoding = THREE.sRGBEncoding;
 document.body.appendChild( renderer1.domElement );
 
 
